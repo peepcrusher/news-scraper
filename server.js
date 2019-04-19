@@ -30,6 +30,34 @@ app.use(express.static("public"));
 mongoose.connect("mongodb://localhost/unit18Populater", { useNewUrlParser: true });
 
 
-app.listen(PORT, function(){
+app.get("/scrape", function (req, res) {
+    axios.get("https://www.theonion.com/tag/opinion").then(function (response) {
+        var $ = cheerio.load(response.data)
+
+
+        $("div.item__text").each(function (i, element) {
+            var result = {};
+
+            result.title = $(this)
+                .children("h1").text();
+
+            result.summary = $(this)
+                .children("div.entry-summary").children("p").text();
+
+            result.link = $(this)
+                .children("h1").children("a").attr("href");
+
+            db.Article.create(result)
+                .then(function (dbArticle) {
+                    console.log(dbArticle);
+                })
+                    .catch(function (err) {
+                        console.log(err);
+                    })
+        })
+    })
+})
+
+app.listen(PORT, function () {
     console.log("App running on port " + PORT);
 })
