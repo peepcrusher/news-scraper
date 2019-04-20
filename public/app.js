@@ -1,7 +1,10 @@
 //Get the json data
 $.getJSON("/articles", function(data){
     for (let i = 0; i < data.length; i++){
-        $("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>");
+        $("#articles").append("<p class='title' data-id='" + data[i]._id + "'>" 
+        + data[i].title + "<br> <p>" 
+        + data[i].summary + "</p> <br>"
+        + data[i].link + "</p>");
     }
 });
 
@@ -25,6 +28,10 @@ $(document).on("click", "p", function(){
         $("#notes").append("<textarea id='bodyinput' name='body'></textarea>");
 
         $("#notes").append("<button data-id='" + data._id + "' id='savenote'> Save Note</button>");
+
+
+            //this button wouldn't show up for some reason
+        // $("$notes").append("<button data-id='" + data._id + "' id='deletenote'>Delete Note</button>");
 
         if(data.note){
             $("#titleinput").val(data.note.title);
@@ -59,3 +66,15 @@ $(document).on("click", "#savenote", function(){
     $("#titleinput").val("");
     $("#bodyinput").val("");
 })
+//My attempt at a delete note function
+// $(document).on("click", "#deletenote", function(){
+// var thisId = $(this.attr("data-id"))
+
+//     $.ajax({
+//         method: "PUT",
+//         url:"/articles/" + thisId
+//     }).then(function(){
+//         $("#titleinput").empty();
+//         $("#bodyinput").empty();
+//     })
+// })
